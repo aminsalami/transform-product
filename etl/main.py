@@ -25,7 +25,7 @@ def handler(event, context):
         try:
             event = json.loads(event)
         except JSONDecodeError as e:
-            logger.error(e)
+            logger.error(e, exc_info=True)
             return {
                 "success": False,
                 "msg": repr(e)
@@ -44,7 +44,7 @@ def handler(event, context):
                 body = json.loads(body)
             s3_events.extend([record for record in body["Records"]])
     except (KeyError, JSONDecodeError) as e:
-        logger.error(e)
+        logger.error(e, exc_info=True)
         return {"success": False, "msg": repr(e)}
 
     for s3_event in s3_events:
@@ -57,10 +57,11 @@ def handler(event, context):
         try:
             h.run()
         except CoreException as e:
-            logger.error(e)
+            logger.error(e, exc_info=True)
             # Handle retry mechanism by propagating the exception to lambda runtime.
             # In this way, s3 notification will not automatically be deleted from sqs.
             if e.propagate:
                 raise
+            logger.info("Caught the exception.\nPREVENT RETRY for this event: %s", s3_event)
 
     return {"success": True}

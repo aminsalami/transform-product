@@ -2,11 +2,8 @@ class CoreException(Exception):
     ctx = ""
     propagate = False
 
-    def __init__(self, msg=""):
-        self.msg = msg
-
     def __str__(self):
-        return self.ctx + " - " + self.msg
+        return self.ctx + " - " + super().__str__()
 
 
 class XmlInvalidStructure(CoreException):

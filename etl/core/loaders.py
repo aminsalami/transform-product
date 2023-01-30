@@ -1,5 +1,6 @@
 # The `xml2json service` converts any xml data to json considering the transformation rules
 import logging
+import traceback
 
 import xmltodict
 
@@ -24,7 +25,7 @@ class ProductXmlLoader:
         try:
             data = xmltodict.parse(raw)
         except Exception as e:
-            raise ConvertException(str(e))
+            raise ConvertException(e)
         try:
             items = data["nsx:items"]["nsx:item"]
         except KeyError as e:
