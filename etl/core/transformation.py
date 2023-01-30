@@ -34,6 +34,7 @@ class ProductTransformer:
 
         # fill the gap
         for i in range(1, max_num):
-            res[prefix + str(i)] = None
+            if str(i) not in images:
+                res[prefix + str(i)] = None
 
         return res

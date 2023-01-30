@@ -19,7 +19,7 @@ def handler(event, context):
     # by defining a builtin Event() object and map `event` argument to builtin `Event` object.
     # Ofcourse it is not needed yet!
 
-    logger.info("Received new event - %s", str(event))
+    logger.info("Received new event - type %s - %s", type(event), str(event))
     # In case the `event` is not converted to dict by lambda runtime
     if isinstance(event, str):
         try:
@@ -40,7 +40,9 @@ def handler(event, context):
         for record in sqs_records:
             body = record["body"]
             if not isinstance(body, dict):
-                s3_events.append(json.loads(body))
+                # In case body is not loaded by lambda runtime
+                body = json.loads(body)
+            s3_events.extend([record for record in body["Records"]])
     except (KeyError, JSONDecodeError) as e:
         logger.error(e)
         return {"success": False, "msg": repr(e)}

@@ -44,3 +44,4 @@ class NewPartnerHandler:
         dest_repo = S3ProductRepo(bucket_name=config["DEST_BUCKET"])
         new_name = key.replace(".xml", ".json")
         dest_repo.save(dto, name=new_name)
+        logger.info("Done.")

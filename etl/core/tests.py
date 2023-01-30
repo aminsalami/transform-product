@@ -1,9 +1,9 @@
 import unittest
 
 from etl.core.dto import RawProduct
-from etl.exceptions import CoreException, XmlInvalidStructure
 from etl.core.loaders import ProductXmlLoader
 from etl.core.transformation import ProductTransformer
+from etl.exceptions import CoreException, XmlInvalidStructure
 
 
 # logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -64,6 +64,11 @@ class TestProductXmlLoader(unittest.TestCase):
         d = data[0]
         self.assertEqual(d.id, "1")
         self.assertEqual(len(d.images), 2)
+        self.assertIn("1", d.images)
+        self.assertIn("3", d.images)
+        self.assertNotIn("2", d.images)
+        self.assertEqual(d.images["1"], "https://sample.com/img/2445456_Image_1.jpg")
+        self.assertEqual(d.images["3"], "https://sample.com/img/2445456_Image_3.jpg")
         self.assertEqual(len(d.prices), 2)
         self.assertEqual(d.prices[0]["value"], "10")
         self.assertEqual(d.prices[1]["value"], "101.2")
@@ -169,6 +174,10 @@ class TestProductTransform(unittest.TestCase):
         self.assertIn("image_1", d1.product_images)
         self.assertIn("image_2", d1.product_images)
         self.assertIn("image_3", d1.product_images)
+        # Test if image url is not converted to null
+        self.assertEqual(d1.product_images["image_1"], p1.images["1"])
+        self.assertEqual(d1.product_images["image_2"], None)
+        self.assertEqual(d1.product_images["image_3"], p1.images["3"])
         self.assertEqual(len(d1.prices), 1)
         self.assertEqual(d1.product_id, p1.id)
         self.assertEqual(d1.product_category, p1.category)
