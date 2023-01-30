@@ -32,6 +32,8 @@ I executed this command to follow the lambda logs (after the first lambda run):
 `docker run -it $(docker build -q .) python3 -m unittest discover .`
 
 ### Notes
+![bs](https://user-images.githubusercontent.com/3495616/215502944-b96010c4-5fad-4da8-bf86-be74b4590fd6.jpg)
+
 The project utilizes AWS Lambda, SQS, and S3 to convert xml files. Instead of long-polling the new events happening on s3, its been configured to send notifications.
 Here is my reasons for choosing these tools:
 * Events coming from S3 should be persistent somehow. We don't want to miss any uploaded file in case the worker is down. A high-available queue is the best option here.
