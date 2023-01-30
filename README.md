@@ -32,7 +32,6 @@ I executed this command to follow the lambda logs (after the first lambda run):
 `docker run -it $(docker build -q .) python3 -m unittest discover .`
 
 ### Notes
-![bs](https://user-images.githubusercontent.com/3495616/215502944-b96010c4-5fad-4da8-bf86-be74b4590fd6.jpg)
 
 The project utilizes AWS Lambda, SQS, and S3 to convert xml files. Instead of long-polling the new events happening on s3, its been configured to send notifications.
 Here is my reasons for choosing these tools:
@@ -43,6 +42,8 @@ Here is my reasons for choosing these tools:
 I think this solution is more suitable for long-running tasks or when we really need a high throughput scenario. I didn't choose this option since workers and dispatchers need to be alive all the time, therefore, the cost would be high.
 
 Around code & architecture:
+![bs](https://user-images.githubusercontent.com/3495616/215502944-b96010c4-5fad-4da8-bf86-be74b4590fd6.jpg)
+
 * Extendability and being Maintainable was my mindset during the development. Any third-party tools (such as databases, APIs, etc) should be dependent to interfaces/ports defined by the core, not the other way around.
 Moreover, I think having immutable data-objects for every stage (load, transform) will be more clean.
 I assumed some fields in raw xml are required. A "invalid XML exception" will be thrown if they are not present.
